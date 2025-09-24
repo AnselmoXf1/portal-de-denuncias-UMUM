@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal de Denúncias Anônimas</title>
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    body {
+        background-color: #f8f9fa;
+        color: #343a40;
+    }
+    .form-container {
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0px 0px 15px rgba(0,0,0,0.1);
+    }
+    .info-box {
+        background: #fff0f0;
+        border-left: 5px solid #8B0000;
+        padding: 20px;
+        border-radius: 10px;
+    }
+    .btn-submit {
+        background-color: #8B0000;
+        color: white;
+    }
+    .btn-submit:hover {
+        background-color: #A52A2A;
+        color: white;
+    }
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#8B0000;">
+  <div class="container">
+    <a class="navbar-brand" href="#">Portal de Denúncias</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Alternar navegação">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container my-5">
+    <div class="row">
+        <!-- Formulário de denúncia -->
+        <div class="col-lg-6 mb-4">
+            <div class="form-container">
+                <h3 class="mb-4">Envie sua denúncia anonimamente</h3>
+                <form id="denunciaForm">
+                    <div class="mb-3">
+                        <label for="categoria" class="form-label">Categoria</label>
+                        <select class="form-select" id="categoria" required>
+                            <option value="" selected disabled>Selecione a categoria</option>
+                            <option value="Assédio">Assédio</option>
+                            <option value="Corrupção">Corrupção</option>
+                            <option value="Infraestrutura">Infraestrutura</option>
+                            <option value="Acadêmico">Acadêmico</option>
+                            <option value="Outros">Outros</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="descricao" class="form-label">Descrição</label>
+                        <textarea class="form-control" id="descricao" rows="6"
+                            placeholder="Descreva detalhadamente o ocorrido..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-submit w-100">Enviar Denúncia</button>
+                    <div id="mensagem" class="mt-3"></div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Informações sobre o sistema -->
+        <div class="col-lg-6 mb-4">
+            <div class="info-box">
+                <h4>Sobre o sistema</h4>
+                <p>Este portal permite enviar denúncias <strong>100% anônimas</strong>. Nenhum dado pessoal é armazenado.</p>
+                <p>Sua denúncia será considerada apenas para fins estatísticos e para melhorar a universidade.</p>
+                <p>Seja objetivo e detalhado ao relatar a situação.</p>
+                <ul>
+                    <li>O envio é totalmente seguro.</li>
+                    <li>As categorias ajudam a organizar os dados.</li>
+                    <li>O painel administrativo exibe apenas gráficos agregados.</li>
+                </ul>
+                <p class="text-muted">Não inclua nomes ou dados que possam identificar alguém.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-dark text-white py-3">
+    <div class="container text-center">
+        &copy; 2025 Anselmo D.Bisiro & Alvaro A.Chidala. Todos os direitos reservados.
+    </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Script para enviar formulário via fetch -->
+<script>
+document.getElementById('denunciaForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const categoria = document.getElementById('categoria').value;
+    const descricao = document.getElementById('descricao').value;
+
+    try {
+        const res = await fetch('/enviar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ categoria, descricao })
+        });
+        if (res.ok) {
+            document.getElementById('mensagem').innerHTML = '<div class="alert alert-success mt-2">Denúncia enviada com sucesso!</div>';
+            document.getElementById('denunciaForm').reset();
+        } else {
+            document.getElementById('mensagem').innerHTML = '<div class="alert alert-danger mt-2">Erro ao enviar denúncia.</div>';
+        }
+    } catch (err) {
+        document.getElementById('mensagem').innerHTML = '<div class="alert alert-danger mt-2">Erro de conexão.</div>';
+    }
+});
+</script>
+
+</body>
+</html>
